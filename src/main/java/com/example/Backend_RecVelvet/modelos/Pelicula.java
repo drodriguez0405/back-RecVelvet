@@ -3,6 +3,7 @@ package com.example.Backend_RecVelvet.modelos;
 import com.example.Backend_RecVelvet.ayudas.enums.EstadoPeliculaEnum;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -41,7 +42,7 @@ public class Pelicula {
     private String urlTrailer;
 
     @Column(name = "fecha_entrega",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private String fechaLanzamiento;
+    private LocalDateTime fechaLanzamiento;
 
     @Column(name = "estado",nullable = false , length = 20)
     private EstadoPeliculaEnum estadoPelicula;
@@ -52,7 +53,7 @@ public class Pelicula {
     public Pelicula() {
     }
 
-    public Pelicula(Integer id, String titulo, String sinopsis, Integer duracionMinutos, String genero, String clasificacion, String director, String actores, String urlPortada, String urlTrailer, String fechaLanzamiento, EstadoPeliculaEnum estadoPelicula) {
+    public Pelicula(Integer id, String titulo, String sinopsis, Integer duracionMinutos, String genero, String clasificacion, String director, String actores, String urlPortada, String urlTrailer, LocalDateTime fechaLanzamiento) {
         this.id = id;
         this.titulo = titulo;
         this.sinopsis = sinopsis;
@@ -64,7 +65,6 @@ public class Pelicula {
         this.urlPortada = urlPortada;
         this.urlTrailer = urlTrailer;
         this.fechaLanzamiento = fechaLanzamiento;
-        this.estadoPelicula = estadoPelicula;
     }
 
     public Integer getId() {
@@ -147,19 +147,11 @@ public class Pelicula {
         this.urlTrailer = urlTrailer;
     }
 
-    public String getFechaLanzamiento() {
+    public LocalDateTime getFechaLanzamiento() {
         return fechaLanzamiento;
     }
 
-    public void setFechaLanzamiento(String fechaLanzamiento) {
+    public void setFechaLanzamiento(LocalDateTime fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
-    }
-
-    public EstadoPeliculaEnum getEstadoPelicula() {
-        return estadoPelicula;
-    }
-
-    public void setEstadoPelicula(EstadoPeliculaEnum estadoPelicula) {
-        this.estadoPelicula = estadoPelicula;
     }
 }

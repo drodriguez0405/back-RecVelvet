@@ -2,6 +2,8 @@ package com.example.Backend_RecVelvet.modelos;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "horario_tabla")
 public class Horario {
@@ -11,10 +13,10 @@ public class Horario {
     private Integer id;
 
     @Column(name = "fecha_hora_inicio",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private String fechaHoraInicio;
+    private LocalDateTime fechaHoraInicio;
 
     @Column(name = "fecha_hora_fin",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private String fechaHoraFin;
+    private LocalDateTime fechaHoraFin;
 
     @Column(name = "precio_general", nullable = false)
     private Double precioGeneral;
@@ -24,13 +26,13 @@ public class Horario {
     private Pelicula pelicula;
 
     @ManyToOne
-    @JoinColumn(name = "fk_sala",referencedColumnName = "sala_id")
+    @JoinColumn(name = "fk_sala",referencedColumnName = "id_sala")
     private Sala sala;
 
     public Horario() {
     }
 
-    public Horario(Integer id, String fechaHoraInicio, String fechaHoraFin, Double precioGeneral) {
+    public Horario(Integer id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, Double precioGeneral) {
         this.id = id;
         this.fechaHoraInicio = fechaHoraInicio;
         this.fechaHoraFin = fechaHoraFin;
@@ -45,19 +47,19 @@ public class Horario {
         this.id = id;
     }
 
-    public String getFechaHoraInicio() {
+    public LocalDateTime getFechaHoraInicio() {
         return fechaHoraInicio;
     }
 
-    public void setFechaHoraInicio(String fechaHoraInicio) {
+    public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
         this.fechaHoraInicio = fechaHoraInicio;
     }
 
-    public String getFechaHoraFin() {
+    public LocalDateTime getFechaHoraFin() {
         return fechaHoraFin;
     }
 
-    public void setFechaHoraFin(String fechaHoraFin) {
+    public void setFechaHoraFin(LocalDateTime fechaHoraFin) {
         this.fechaHoraFin = fechaHoraFin;
     }
 

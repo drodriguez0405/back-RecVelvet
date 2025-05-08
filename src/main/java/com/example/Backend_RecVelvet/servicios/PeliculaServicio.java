@@ -64,7 +64,6 @@ public class PeliculaServicio {
                 peliculaActualizar.setUrlPortada(datosPelicula.getUrlPortada());
                 peliculaActualizar.setUrlTrailer(datosPelicula.getUrlTrailer());
                 peliculaActualizar.setFechaLanzamiento(datosPelicula.getFechaLanzamiento());
-                peliculaActualizar.setEstadoPelicula(datosPelicula.getEstadoPelicula());
                 return this.repositorio.save(peliculaActualizar);
             } else {
                 throw new Exception("Película no encontrada");

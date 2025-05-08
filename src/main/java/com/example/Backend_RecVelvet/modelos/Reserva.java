@@ -2,6 +2,7 @@ package com.example.Backend_RecVelvet.modelos;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ public class Reserva {
     private Integer id;
 
     @Column(name = "fecha_reserva", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private String fechaReserva;
+    private LocalDateTime fechaReserva;
 
     @Column(name = "codigo_reserva", unique = true, nullable = false)
     private String codigoReserva;
@@ -30,13 +31,11 @@ public class Reserva {
 
     @Column(name = "transaccion_id", unique = true)
     private String transaccionId;
-    public Reserva() {
-    }
+
 
     @ManyToOne
     @JoinColumn(name = "fk_usuario", referencedColumnName = "id_usuario")
     private Usuario usuario;
-
 
     @ManyToOne
     @JoinColumn(name = "fk_horario", referencedColumnName = "id_horario")
@@ -44,8 +43,10 @@ public class Reserva {
 
     @OneToMany(mappedBy = "reserva")
     private List<ButacaReserva> butacaReservas;
+    public Reserva() {
+    }
 
-    public Reserva(Integer id, String fechaReserva, String codigoReserva, String totalPagado, String estadoPago, String metodoPago, String transaccionId) {
+    public Reserva(Integer id, LocalDateTime fechaReserva, String codigoReserva, String totalPagado, String estadoPago, String metodoPago, String transaccionId) {
         this.id = id;
         this.fechaReserva = fechaReserva;
         this.codigoReserva = codigoReserva;
@@ -63,11 +64,11 @@ public class Reserva {
         this.id = id;
     }
 
-    public String getFechaReserva() {
+    public LocalDateTime getFechaReserva() {
         return fechaReserva;
     }
 
-    public void setFechaReserva(String fechaReserva) {
+    public void setFechaReserva(LocalDateTime fechaReserva) {
         this.fechaReserva = fechaReserva;
     }
 
@@ -107,7 +108,7 @@ public class Reserva {
         return transaccionId;
     }
 
-    public void setTransaccionId(String transacionId) {
-        this.transaccionId = transacionId;
+    public void setTransaccionId(String transaccionId) {
+        this.transaccionId = transaccionId;
     }
 }

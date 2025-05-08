@@ -3,6 +3,8 @@ package com.example.Backend_RecVelvet.modelos;
 import com.example.Backend_RecVelvet.ayudas.enums.UsuarioRolEnum;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,19 +18,19 @@ public class Usuario {
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "correo_electronico", nullable = false, length = 100, unique = true)
+    @Column(name = "correo_electronico",length = 100, unique = true,nullable = false)
     private String correoElectronico;
 
     @Column(name = "contrasena", nullable = false, length = 255)
     private String contrasena;
 
-    @Column(name = "fecha_registro", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private String fechaRegistro;
+    @Column(name = "fecha_registro", columnDefinition = "DATE DEFAULT CURRENT_DATE")
+    private LocalDate fechaRegistro;
 
-    @Column(name = "ultimo_login")
-    private String ultimoLogin;
+    @Column(name = "ultimo_login", columnDefinition = "DATE DEFAULT CURRENT_DATE")
+    private LocalDate ultimoLogin;
 
-    @Column(name = "rol_usuario", nullable = false)
+    @Column(name = "rol_usuario")
     private UsuarioRolEnum usuarioRol;
 
     @OneToMany(mappedBy = "usuario")
@@ -36,14 +38,13 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Integer id, String nombre, String correoElectronico, String contrasena, String fechaRegistro, String ultimoLogin, UsuarioRolEnum usuarioRol) {
-        this.id = id;
+    public Usuario(String nombre, String correoElectronico, String contrasena, UsuarioRolEnum usuarioRol) {
         this.nombre = nombre;
         this.correoElectronico = correoElectronico;
         this.contrasena = contrasena;
-        this.fechaRegistro = fechaRegistro;
-        this.ultimoLogin = ultimoLogin;
         this.usuarioRol = usuarioRol;
+        this.fechaRegistro = LocalDate.now();
+        this.ultimoLogin = LocalDate.now();
     }
 
     public Integer getId() {
@@ -78,19 +79,19 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    public String getFechaRegistro() {
+    public LocalDate getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(String fechaRegistro) {
+    public void setFechaRegistro(LocalDate fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public String getUltimoLogin() {
+    public LocalDate getUltimoLogin() {
         return ultimoLogin;
     }
 
-    public void setUltimoLogin(String ultimoLogin) {
+    public void setUltimoLogin(LocalDate ultimoLogin) {
         this.ultimoLogin = ultimoLogin;
     }
 

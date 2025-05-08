@@ -21,7 +21,7 @@ public class ButacaReserva {
     private Reserva reserva;
 
     @ManyToOne
-    @JoinColumn(name = "fk_sala", referencedColumnName = "sala_id")
+    @JoinColumn(name = "fk_sala", referencedColumnName = "id_sala")
     private Sala sala;
 
 
