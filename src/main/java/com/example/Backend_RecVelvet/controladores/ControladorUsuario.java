@@ -14,12 +14,13 @@ public class ControladorUsuario {
     @Autowired
     UsuarioServicio usuarioServicio;
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Usuario datosPeticion) {
+    @PostMapping(consumes = "application/json;charset=UTF-8")
+    public ResponseEntity<?> guardarUsuario(@RequestBody Usuario datosUsuario) {
+        System.out.println("Entrando a guardarUsuario");
         try {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(this.usuarioServicio.guardarUsuario(datosPeticion));
+                    .body(this.usuarioServicio.guardarUsuario(datosUsuario));
         } catch (Exception error) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -27,8 +28,9 @@ public class ControladorUsuario {
         }
     }
 
+    //Buscar todos
     @GetMapping
-    public ResponseEntity<?> buscarTodos() {
+    public ResponseEntity<?> buscarTodosUsuarios() {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -40,8 +42,9 @@ public class ControladorUsuario {
         }
     }
 
+    //Buscar por ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> buscarUsuarioPorId(@PathVariable Integer id) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -53,12 +56,13 @@ public class ControladorUsuario {
         }
     }
 
+    //Modificar
     @PutMapping("/{id}")
-    public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody Usuario datos) {
+    public ResponseEntity<?> modificarUsuario(@PathVariable Integer id, @RequestBody Usuario datosUsuario) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(this.usuarioServicio.modificarUsuario(id, datos));
+                    .body(this.usuarioServicio.modificarUsuario(id, datosUsuario));
         } catch (Exception error) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -66,8 +70,9 @@ public class ControladorUsuario {
         }
     }
 
+    //Eliminar
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)

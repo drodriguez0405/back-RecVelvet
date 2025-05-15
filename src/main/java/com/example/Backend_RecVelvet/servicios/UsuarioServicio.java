@@ -13,16 +13,17 @@ public class UsuarioServicio {
     @Autowired
     IUsuarioRepositorio repositorio;
 
-    // Guardar usuario
+    //guardar
     public Usuario guardarUsuario(Usuario datosUsuario) throws Exception {
         try {
+            //validar los datos de entrada
             return this.repositorio.save(datosUsuario);
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Buscar todos los usuarios
+    //buscar todos los registros
     public List<Usuario> buscarTodosUsuarios() throws Exception {
         try {
             return this.repositorio.findAll();
@@ -31,33 +32,32 @@ public class UsuarioServicio {
         }
     }
 
-    // Buscar usuario por ID
+    //buscar por id
     public Usuario buscarUsuarioPorId(Integer idUsuario) throws Exception {
         try {
             Optional<Usuario> usuarioBuscado = this.repositorio.findById(idUsuario);
             if (usuarioBuscado.isPresent()) {
                 return usuarioBuscado.get();
             } else {
-                throw new Exception("Usuario no encontrado");
+                throw new Exception("El usuario consultado no está en BD");
             }
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Modificar usuario (actualiza TODOS los campos)
+    //modificar por id
     public Usuario modificarUsuario(Integer id, Usuario datosUsuario) throws Exception {
         try {
             Optional<Usuario> usuarioBuscado = this.repositorio.findById(id);
             if (usuarioBuscado.isPresent()) {
-                Usuario usuarioActualizar = usuarioBuscado.get();
-                usuarioActualizar.setNombre(datosUsuario.getNombre());
-                usuarioActualizar.setCorreoElectronico(datosUsuario.getCorreoElectronico());
-                usuarioActualizar.setContrasena(datosUsuario.getContrasena());
-                usuarioActualizar.setUsuarioRol(datosUsuario.getUsuarioRol());
-                usuarioActualizar.setFechaRegistro(datosUsuario.getFechaRegistro());
-                usuarioActualizar.setUltimoLogin(datosUsuario.getUltimoLogin());
-                return this.repositorio.save(usuarioActualizar);
+                usuarioBuscado.get().setNombre(datosUsuario.getNombre());
+                usuarioBuscado.get().setCorreoElectronico(datosUsuario.getCorreoElectronico());
+                usuarioBuscado.get().setContrasena(datosUsuario.getContrasena());
+                usuarioBuscado.get().setUsuarioRol(datosUsuario.getUsuarioRol());
+                usuarioBuscado.get().setFechaRegistro(datosUsuario.getFechaRegistro());
+                usuarioBuscado.get().setUltimoLogin(datosUsuario.getUltimoLogin());
+                return this.repositorio.save(usuarioBuscado.get());
             } else {
                 throw new Exception("Usuario no encontrado");
             }
@@ -66,7 +66,7 @@ public class UsuarioServicio {
         }
     }
 
-    // Eliminar usuario
+    //eliminar por id
     public boolean eliminarUsuario(Integer id) throws Exception {
         try {
             Optional<Usuario> usuarioBuscado = this.repositorio.findById(id);

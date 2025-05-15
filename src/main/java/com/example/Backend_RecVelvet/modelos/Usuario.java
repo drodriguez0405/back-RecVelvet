@@ -1,10 +1,12 @@
 package com.example.Backend_RecVelvet.modelos;
 
 import com.example.Backend_RecVelvet.ayudas.enums.UsuarioRolEnum;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -25,15 +27,20 @@ public class Usuario {
     private String contrasena;
 
     @Column(name = "fecha_registro", columnDefinition = "DATE DEFAULT CURRENT_DATE")
+    //@JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate fechaRegistro;
 
     @Column(name = "ultimo_login", columnDefinition = "DATE DEFAULT CURRENT_DATE")
+    //@JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate ultimoLogin;
 
-    @Column(name = "rol_usuario")
+    @Enumerated(EnumType.STRING)
+    //@Column(name = "rol_usuario")
     private UsuarioRolEnum usuarioRol;
 
+
     @OneToMany(mappedBy = "usuario")
+    @JsonManagedReference(value = "usuario-reservas")
     private List<Reserva> reservas;
     public Usuario() {
     }

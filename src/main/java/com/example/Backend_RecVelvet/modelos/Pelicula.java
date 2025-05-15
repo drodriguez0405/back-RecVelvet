@@ -1,6 +1,8 @@
 package com.example.Backend_RecVelvet.modelos;
 
 import com.example.Backend_RecVelvet.ayudas.enums.EstadoPeliculaEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -42,12 +44,15 @@ public class Pelicula {
     private String urlTrailer;
 
     @Column(name = "fecha_entrega",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDateTime fechaLanzamiento;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "estado",nullable = false , length = 20)
     private EstadoPeliculaEnum estadoPelicula;
 
     @OneToMany(mappedBy = "pelicula")
+    @JsonManagedReference(value = "pelicula-horarios")
     private List<Horario> horarios;
 
     public Pelicula() {
@@ -153,5 +158,13 @@ public class Pelicula {
 
     public void setFechaLanzamiento(LocalDateTime fechaLanzamiento) {
         this.fechaLanzamiento = fechaLanzamiento;
+    }
+
+    public EstadoPeliculaEnum getEstadoPelicula() {
+        return estadoPelicula;
+    }
+
+    public void setEstadoPelicula(EstadoPeliculaEnum estadoPelicula) {
+        this.estadoPelicula = estadoPelicula;
     }
 }

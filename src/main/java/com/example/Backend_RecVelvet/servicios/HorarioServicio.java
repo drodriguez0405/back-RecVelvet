@@ -13,16 +13,17 @@ public class HorarioServicio {
     @Autowired
     IHorarioRepositorio repositorio;
 
-    // Guardar horario
+    //guardar
     public Horario guardarHorario(Horario datosHorario) throws Exception {
         try {
+            //validar los datos de entrada
             return this.repositorio.save(datosHorario);
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Buscar todos los horarios
+    //buscar todos los registros
     public List<Horario> buscarTodosHorarios() throws Exception {
         try {
             return this.repositorio.findAll();
@@ -31,30 +32,29 @@ public class HorarioServicio {
         }
     }
 
-    // Buscar horario por ID
+    //buscar por id
     public Horario buscarHorarioPorId(Integer idHorario) throws Exception {
         try {
             Optional<Horario> horarioBuscado = this.repositorio.findById(idHorario);
             if (horarioBuscado.isPresent()) {
                 return horarioBuscado.get();
             } else {
-                throw new Exception("Horario no encontrado");
+                throw new Exception("El horario consultado no está en BD");
             }
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Modificar horario
+    //modificar por id
     public Horario modificarHorario(Integer id, Horario datosHorario) throws Exception {
         try {
             Optional<Horario> horarioBuscado = this.repositorio.findById(id);
             if (horarioBuscado.isPresent()) {
-                Horario horarioActualizar = horarioBuscado.get();
-                horarioActualizar.setFechaHoraInicio(datosHorario.getFechaHoraInicio());
-                horarioActualizar.setFechaHoraFin(datosHorario.getFechaHoraFin());
-                horarioActualizar.setPrecioGeneral(datosHorario.getPrecioGeneral());
-                return this.repositorio.save(horarioActualizar);
+                horarioBuscado.get().setFechaHoraInicio(datosHorario.getFechaHoraInicio());
+                horarioBuscado.get().setFechaHoraFin(datosHorario.getFechaHoraFin());
+                horarioBuscado.get().setPrecioGeneral(datosHorario.getPrecioGeneral());
+                return this.repositorio.save(horarioBuscado.get());
             } else {
                 throw new Exception("Horario no encontrado");
             }
@@ -63,7 +63,7 @@ public class HorarioServicio {
         }
     }
 
-    // Eliminar horario
+    //eliminar por id
     public boolean eliminarHorario(Integer id) throws Exception {
         try {
             Optional<Horario> horarioBuscado = this.repositorio.findById(id);

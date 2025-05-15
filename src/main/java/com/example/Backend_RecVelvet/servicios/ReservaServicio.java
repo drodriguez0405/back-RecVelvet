@@ -14,16 +14,17 @@ public class ReservaServicio {
     @Autowired
     IReservaRepositorio repositorio;
 
-    // Guardar reserva
+    //guardar
     public Reserva guardarReserva(Reserva datosReserva) throws Exception {
         try {
+            //validar los datos de entrada
             return this.repositorio.save(datosReserva);
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Buscar todas las reservas
+    //buscar todos los registros
     public List<Reserva> buscarTodasReservas() throws Exception {
         try {
             return this.repositorio.findAll();
@@ -32,33 +33,32 @@ public class ReservaServicio {
         }
     }
 
-    // Buscar reserva por ID
+    //buscar por id
     public Reserva buscarReservaPorId(Integer idReserva) throws Exception {
         try {
             Optional<Reserva> reservaBuscada = this.repositorio.findById(idReserva);
             if (reservaBuscada.isPresent()) {
                 return reservaBuscada.get();
             } else {
-                throw new Exception("Reserva no encontrada");
+                throw new Exception("La reserva consultada no está en BD");
             }
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Modificar reserva (actualiza todos los campos)
+    //modificar por id
     public Reserva modificarReserva(Integer id, Reserva datosReserva) throws Exception {
         try {
             Optional<Reserva> reservaBuscada = this.repositorio.findById(id);
             if (reservaBuscada.isPresent()) {
-                Reserva reservaActualizar = reservaBuscada.get();
-                reservaActualizar.setFechaReserva(datosReserva.getFechaReserva());
-                reservaActualizar.setCodigoReserva(datosReserva.getCodigoReserva());
-                reservaActualizar.setTotalPagado(datosReserva.getTotalPagado());
-                reservaActualizar.setEstadoPago(datosReserva.getEstadoPago());
-                reservaActualizar.setMetodoPago(datosReserva.getMetodoPago());
-                reservaActualizar.setTransaccionId(datosReserva.getTransaccionId());
-                return this.repositorio.save(reservaActualizar);
+                reservaBuscada.get().setFechaReserva(datosReserva.getFechaReserva());
+                reservaBuscada.get().setCodigoReserva(datosReserva.getCodigoReserva());
+                reservaBuscada.get().setTotalPagado(datosReserva.getTotalPagado());
+                reservaBuscada.get().setEstadoPago(datosReserva.getEstadoPago());
+                reservaBuscada.get().setMetodoPago(datosReserva.getMetodoPago());
+                reservaBuscada.get().setTransaccionId(datosReserva.getTransaccionId());
+                return this.repositorio.save(reservaBuscada.get());
             } else {
                 throw new Exception("Reserva no encontrada");
             }
@@ -67,7 +67,7 @@ public class ReservaServicio {
         }
     }
 
-    // Eliminar reserva
+    //eliminar por id
     public boolean eliminarReserva(Integer id) throws Exception {
         try {
             Optional<Reserva> reservaBuscada = this.repositorio.findById(id);

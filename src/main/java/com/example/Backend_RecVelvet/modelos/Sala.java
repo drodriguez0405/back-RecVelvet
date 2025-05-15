@@ -1,5 +1,6 @@
 package com.example.Backend_RecVelvet.modelos;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -22,9 +23,11 @@ public class Sala {
     private String descripcion;
 
     @OneToMany(mappedBy = "sala")
+    @JsonManagedReference(value = "sala-horarios")
     private List<Horario> horarios;
 
     @OneToMany(mappedBy = "sala")
+    @JsonManagedReference(value = "sala-butacas")
     private List<ButacaReserva> butacasReservadas;
 
     public Sala() {

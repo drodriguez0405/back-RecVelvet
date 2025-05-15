@@ -1,7 +1,11 @@
 package com.example.Backend_RecVelvet.modelos;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +19,8 @@ public class Reserva {
     private Integer id;
 
     @Column(name = "fecha_reserva", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime fechaReserva;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate fechaReserva;
 
     @Column(name = "codigo_reserva", unique = true, nullable = false)
     private String codigoReserva;
@@ -35,20 +40,23 @@ public class Reserva {
 
     @ManyToOne
     @JoinColumn(name = "fk_usuario", referencedColumnName = "id_usuario")
+    @JsonBackReference(value = "usuario-reservas")
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "fk_horario", referencedColumnName = "id_horario")
+    @JsonManagedReference(value = "horario-reservas")
     private Horario horario;
 
-    @OneToMany(mappedBy = "reserva")
+    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "reserva-butacas")
     private List<ButacaReserva> butacaReservas;
     public Reserva() {
     }
 
     public Reserva(Integer id, LocalDateTime fechaReserva, String codigoReserva, String totalPagado, String estadoPago, String metodoPago, String transaccionId) {
         this.id = id;
-        this.fechaReserva = fechaReserva;
+        this.fechaReserva = LocalDate.from(fechaReserva);
         this.codigoReserva = codigoReserva;
         this.totalPagado = totalPagado;
         this.estadoPago = estadoPago;
@@ -65,11 +73,11 @@ public class Reserva {
     }
 
     public LocalDateTime getFechaReserva() {
-        return fechaReserva;
+        return fechaReserva.atStartOfDay();
     }
 
     public void setFechaReserva(LocalDateTime fechaReserva) {
-        this.fechaReserva = fechaReserva;
+        this.fechaReserva = LocalDate.from(fechaReserva);
     }
 
     public String getCodigoReserva() {

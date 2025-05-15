@@ -13,16 +13,17 @@ public class SalaServicio {
     @Autowired
     ISalaRepositorio repositorio;
 
-    // Guardar sala
+    //guardar
     public Sala guardarSala(Sala datosSala) throws Exception {
         try {
+            //validar los datos de entrada
             return this.repositorio.save(datosSala);
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Buscar todas las salas
+    //buscar todos los registros
     public List<Sala> buscarTodasSalas() throws Exception {
         try {
             return this.repositorio.findAll();
@@ -31,30 +32,29 @@ public class SalaServicio {
         }
     }
 
-    // Buscar sala por ID
+    //buscar por id
     public Sala buscarSalaPorId(Integer idSala) throws Exception {
         try {
             Optional<Sala> salaBuscada = this.repositorio.findById(idSala);
             if (salaBuscada.isPresent()) {
                 return salaBuscada.get();
             } else {
-                throw new Exception("Sala no encontrada");
+                throw new Exception("La sala consultada no está en BD");
             }
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
     }
 
-    // Modificar sala (actualiza todos los campos)
+    //modificar por id
     public Sala modificarSala(Integer id, Sala datosSala) throws Exception {
         try {
             Optional<Sala> salaBuscada = this.repositorio.findById(id);
             if (salaBuscada.isPresent()) {
-                Sala salaActualizar = salaBuscada.get();
-                salaActualizar.setNombre(datosSala.getNombre());
-                salaActualizar.setCapacidad(datosSala.getCapacidad());
-                salaActualizar.setDescripcion(datosSala.getDescripcion());
-                return this.repositorio.save(salaActualizar);
+                salaBuscada.get().setNombre(datosSala.getNombre());
+                salaBuscada.get().setCapacidad(datosSala.getCapacidad());
+                salaBuscada.get().setDescripcion(datosSala.getDescripcion());
+                return this.repositorio.save(salaBuscada.get());
             } else {
                 throw new Exception("Sala no encontrada");
             }
@@ -63,7 +63,7 @@ public class SalaServicio {
         }
     }
 
-    // Eliminar sala
+    //eliminar por id
     public boolean eliminarSala(Integer id) throws Exception {
         try {
             Optional<Sala> salaBuscada = this.repositorio.findById(id);

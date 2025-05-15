@@ -1,5 +1,6 @@
 package com.example.Backend_RecVelvet.modelos;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,10 +19,12 @@ public class ButacaReserva {
 
     @ManyToOne
     @JoinColumn(name = "fk_reserva", referencedColumnName = "id_reserva")
+    @JsonBackReference(value = "reserva-butacas")
     private Reserva reserva;
 
     @ManyToOne
     @JoinColumn(name = "fk_sala", referencedColumnName = "id_sala")
+    @JsonBackReference(value = "sala")
     private Sala sala;
 
 
