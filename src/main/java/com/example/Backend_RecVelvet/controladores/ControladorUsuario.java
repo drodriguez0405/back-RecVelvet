@@ -2,85 +2,65 @@ package com.example.Backend_RecVelvet.controladores;
 
 import com.example.Backend_RecVelvet.modelos.Usuario;
 import com.example.Backend_RecVelvet.servicios.UsuarioServicio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/api")
 public class ControladorUsuario {
 
     @Autowired
-    UsuarioServicio usuarioServicio;
+    UsuarioServicio servicio;
 
-    @PostMapping(consumes = "application/json;charset=UTF-8")
-    public ResponseEntity<?> guardarUsuario(@RequestBody Usuario datosUsuario) {
-        System.out.println("Entrando a guardarUsuario");
+    @PostMapping(path = "/usuarios",
+            consumes = "application/json",  // ¡Sin MediaType!
+            produces = "application/json")
+    public ResponseEntity<?> guardarUsuario(@Valid @RequestBody Usuario usuario) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(this.usuarioServicio.guardarUsuario(datosUsuario));
+            return ResponseEntity.status(HttpStatus.CREATED).body(servicio.guardarUsuario(usuario));
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    //Buscar todos
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> buscarTodosUsuarios() {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.usuarioServicio.buscarTodosUsuarios());
+            return ResponseEntity.ok(servicio.buscarTodosUsuarios());
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
         }
     }
 
-    //Buscar por ID
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> buscarUsuarioPorId(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.usuarioServicio.buscarUsuarioPorId(id));
+            return ResponseEntity.ok(servicio.buscarUsuarioPorId(id));
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
         }
     }
 
-    //Modificar
-    @PutMapping("/{id}")
-    public ResponseEntity<?> modificarUsuario(@PathVariable Integer id, @RequestBody Usuario datosUsuario) {
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> modificarUsuario(@PathVariable Integer id, @Valid @RequestBody Usuario datosUsuario) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.usuarioServicio.modificarUsuario(id, datosUsuario));
+            return ResponseEntity.ok(servicio.modificarUsuario(id, datosUsuario));
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    //Eliminar
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.usuarioServicio.eliminarUsuario(id));
+            servicio.eliminarUsuario(id);
+            return ResponseEntity.ok("Usuario eliminado correctamente");
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 }

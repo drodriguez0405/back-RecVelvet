@@ -16,65 +16,45 @@ public class ControladorReserva {
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody Reserva datosPeticion) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(this.reservaServicio.guardarReserva(datosPeticion));
+            return new ResponseEntity<>(this.reservaServicio.guardarReserva(datosPeticion), HttpStatus.CREATED);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping
     public ResponseEntity<?> buscarTodos() {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.reservaServicio.buscarTodasReservas());
+            return new ResponseEntity<>(this.reservaServicio.buscarTodasReservas(), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.reservaServicio.buscarReservaPorId(id));
+            return new ResponseEntity<>(this.reservaServicio.buscarReservaPorId(id), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody Reserva datos) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.reservaServicio.modificarReserva(id, datos));
+            return new ResponseEntity<>(this.reservaServicio.modificarReserva(id, datos), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_GATEWAY);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.reservaServicio.eliminarReserva(id));
+            return new ResponseEntity<>(this.reservaServicio.eliminarReserva(id), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

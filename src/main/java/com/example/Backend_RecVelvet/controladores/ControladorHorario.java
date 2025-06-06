@@ -16,65 +16,45 @@ public class ControladorHorario {
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody Horario datosPeticion) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(this.horarioServicio.guardarHorario(datosPeticion));
+            return new ResponseEntity<>(this.horarioServicio.guardarHorario(datosPeticion), HttpStatus.CREATED);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping
     public ResponseEntity<?> buscarTodos() {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.horarioServicio.buscarTodosHorarios());
+            return new ResponseEntity<>(this.horarioServicio.buscarTodosHorarios(), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.horarioServicio.buscarHorarioPorId(id));
+            return new ResponseEntity<>(this.horarioServicio.buscarHorarioPorId(id), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody Horario datos) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.horarioServicio.modificarHorario(id, datos));
+            return new ResponseEntity<>(this.horarioServicio.modificarHorario(id, datos), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_GATEWAY);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.horarioServicio.eliminarHorario(id));
+            return new ResponseEntity<>(this.horarioServicio.eliminarHorario(id), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

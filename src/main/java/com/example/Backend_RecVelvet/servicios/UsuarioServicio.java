@@ -14,10 +14,10 @@ public class UsuarioServicio {
     IUsuarioRepositorio repositorio;
 
     //guardar
-    public Usuario guardarUsuario(Usuario datosUsuario) throws Exception {
+    public Usuario guardarUsuario(Usuario usuario) throws Exception {
         try {
             //validar los datos de entrada
-            return this.repositorio.save(datosUsuario);
+            return this.repositorio.save(usuario);
         } catch (Exception error) {
             throw new Exception(error.getMessage());
         }
@@ -33,9 +33,9 @@ public class UsuarioServicio {
     }
 
     //buscar por id
-    public Usuario buscarUsuarioPorId(Integer idUsuario) throws Exception {
+    public Usuario buscarUsuarioPorId(Integer id) throws Exception {
         try {
-            Optional<Usuario> usuarioBuscado = this.repositorio.findById(idUsuario);
+            Optional<Usuario> usuarioBuscado = this.repositorio.findById(id);
             if (usuarioBuscado.isPresent()) {
                 return usuarioBuscado.get();
             } else {

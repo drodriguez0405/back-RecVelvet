@@ -11,70 +11,50 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sala")
 public class ControladorSala {
     @Autowired
-    SalaServicio salaServicio;
+    SalaServicio servicio;
 
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody Sala datosPeticion) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(this.salaServicio.guardarSala(datosPeticion));
+            return new ResponseEntity<>(this.servicio.guardarSala(datosPeticion), HttpStatus.CREATED);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping
     public ResponseEntity<?> buscarTodos() {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.salaServicio.buscarTodasSalas());
+            return new ResponseEntity<>(this.servicio.buscarTodasSalas(), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.salaServicio.buscarSalaPorId(id));
+            return new ResponseEntity<>(this.servicio.buscarSalaPorId(id), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody Sala datos) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.salaServicio.modificarSala(id, datos));
+            return new ResponseEntity<>(this.servicio.modificarSala(id, datos), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_GATEWAY);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.salaServicio.eliminarSala(id));
+            return new ResponseEntity<>(this.servicio.eliminarSala(id), HttpStatus.OK);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(error.getMessage());
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

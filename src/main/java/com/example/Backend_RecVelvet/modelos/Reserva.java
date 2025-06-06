@@ -19,8 +19,7 @@ public class Reserva {
     private Integer id;
 
     @Column(name = "fecha_reserva", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate fechaReserva;
+    private LocalDateTime fechaReserva;
 
     @Column(name = "codigo_reserva", unique = true, nullable = false)
     private String codigoReserva;
@@ -56,7 +55,7 @@ public class Reserva {
 
     public Reserva(Integer id, LocalDateTime fechaReserva, String codigoReserva, String totalPagado, String estadoPago, String metodoPago, String transaccionId) {
         this.id = id;
-        this.fechaReserva = LocalDate.from(fechaReserva);
+        this.fechaReserva = fechaReserva;
         this.codigoReserva = codigoReserva;
         this.totalPagado = totalPagado;
         this.estadoPago = estadoPago;
@@ -73,11 +72,11 @@ public class Reserva {
     }
 
     public LocalDateTime getFechaReserva() {
-        return fechaReserva.atStartOfDay();
+        return fechaReserva;
     }
 
     public void setFechaReserva(LocalDateTime fechaReserva) {
-        this.fechaReserva = LocalDate.from(fechaReserva);
+        this.fechaReserva = fechaReserva;
     }
 
     public String getCodigoReserva() {

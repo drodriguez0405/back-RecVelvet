@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -16,15 +17,13 @@ public class Horario {
     private Integer id;
 
     @Column(name = "fecha_hora_inicio",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate fechaHoraInicio;
+    private LocalDateTime fechaHoraInicio;
 
     @Column(name = "fecha_hora_fin",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate fechaHoraFin;
+    private LocalDateTime fechaHoraFin;
 
     @Column(name = "precio_general", nullable = false)
-    private Double precioGeneral;
+    private BigDecimal precioGeneral;
 
     @ManyToOne
     @JoinColumn(name = "fk_pelicula", referencedColumnName = "id_pelicula")
@@ -39,10 +38,10 @@ public class Horario {
     public Horario() {
     }
 
-    public Horario(Integer id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, Double precioGeneral) {
+    public Horario(Integer id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, BigDecimal precioGeneral) {
         this.id = id;
-        this.fechaHoraInicio = LocalDate.from(fechaHoraInicio);
-        this.fechaHoraFin = LocalDate.from(fechaHoraFin);
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.fechaHoraFin = fechaHoraFin;
         this.precioGeneral = precioGeneral;
     }
 
@@ -55,26 +54,26 @@ public class Horario {
     }
 
     public LocalDateTime getFechaHoraInicio() {
-        return fechaHoraInicio.atStartOfDay();
+        return fechaHoraInicio;
     }
 
     public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
-        this.fechaHoraInicio = LocalDate.from(fechaHoraInicio);
+        this.fechaHoraInicio = fechaHoraInicio;
     }
 
     public LocalDateTime getFechaHoraFin() {
-        return fechaHoraFin.atStartOfDay();
+        return fechaHoraFin;
     }
 
     public void setFechaHoraFin(LocalDateTime fechaHoraFin) {
-        this.fechaHoraFin = LocalDate.from(fechaHoraFin);
+        this.fechaHoraFin = fechaHoraFin;
     }
 
-    public Double getPrecioGeneral() {
+    public BigDecimal getPrecioGeneral() {
         return precioGeneral;
     }
 
-    public void setPrecioGeneral(Double precioGeneral) {
+    public void setPrecioGeneral(BigDecimal precioGeneral) {
         this.precioGeneral = precioGeneral;
     }
 }

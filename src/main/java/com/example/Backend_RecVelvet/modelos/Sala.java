@@ -13,13 +13,13 @@ public class Sala {
     @Column(name = "id_sala")
     private Integer id;
 
-    @Column(name = "nombre", nullable = false, length = 100)
+    @Column(name = "nombre", length = 100, nullable = false)
     private String nombre;
 
     @Column(name = "capacidad", nullable = false)
-    private int capacidad;
+    private Integer capacidad;
 
-    @Column(name = "descripcion", length = 250)
+    @Column(name = "descripcion")
     private String descripcion;
 
     @OneToMany(mappedBy = "sala")

@@ -16,39 +16,39 @@ public class Pelicula {
     @Column(name = "id_pelicula")
     private Integer id;
 
-    @Column(name = "titulo",nullable = false, length = 255)
+    @Column(name = "titulo", length = 150,nullable = false)
     private String titulo;
 
-    @Column(name = "sinopsis",nullable = false, length = 255)
+    @Column(name = "sinopsis", length = 150,nullable = false)
     private String sinopsis;
 
-    @Column(name = "duracion_minutos",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "duracion_minutos")
     private Integer duracionMinutos;
 
-    @Column(name = "genero",nullable = false ,length = 50)
+    @Column(name = "genero" ,length = 50,nullable = false)
     private String genero;
 
-    @Column(name = "clasificacion",nullable = false , length = 10)
+    @Column(name = "clasificacion", length = 10,nullable = false )
     private String clasificacion;
 
-    @Column(name = "director",nullable = false , length = 100)
+    @Column(name = "director" , length = 100, nullable = false)
     private String director;
 
-    @Column(name = "actores",nullable = false , length = 100)
+    @Column(name = "actores", length = 100 ,nullable = false )
     private String actores;
 
-    @Column(name = "url_portada",nullable = false , length = 255)
+    @Column(name = "url_portada" , length = 150, nullable = false)
     private String urlPortada;
 
-    @Column(name = "url_trailer",nullable = false , length = 255)
+    @Column(name = "url_trailer", length = 185,nullable = false )
     private String urlTrailer;
 
     @Column(name = "fecha_entrega",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDateTime fechaLanzamiento;
 
+
+    @Column(name = "estado" ,columnDefinition = "VARCHAR(40) DEFAULT 'ESTRENO'")
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado",nullable = false , length = 20)
     private EstadoPeliculaEnum estadoPelicula;
 
     @OneToMany(mappedBy = "pelicula")

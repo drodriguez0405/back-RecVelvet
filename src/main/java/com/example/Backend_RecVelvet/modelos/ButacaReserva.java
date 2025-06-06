@@ -11,10 +11,10 @@ public class ButacaReserva {
     @Column(name = "id_butaca_reserva")
     private Integer id;
 
-    @Column(name = "numero_fila", nullable = false,length = 50)
+    @Column(name = "numero_fila",length = 50, nullable = false)
     private String numeroFila;
 
-    @Column(name = "numero_asiento", nullable = false,length = 10)
+    @Column(name = "numero_asiento",length = 10, nullable = false)
     private String numeroAsiento;
 
     @ManyToOne
