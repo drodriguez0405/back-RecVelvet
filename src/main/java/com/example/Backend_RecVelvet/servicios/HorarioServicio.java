@@ -1,7 +1,12 @@
 package com.example.Backend_RecVelvet.servicios;
 
+import com.example.Backend_RecVelvet.dtos.HorarioDTO;
 import com.example.Backend_RecVelvet.modelos.Horario;
+import com.example.Backend_RecVelvet.modelos.Pelicula;
+import com.example.Backend_RecVelvet.modelos.Sala;
 import com.example.Backend_RecVelvet.repositorios.IHorarioRepositorio;
+import com.example.Backend_RecVelvet.repositorios.IPeliculaRepositorio;
+import com.example.Backend_RecVelvet.repositorios.ISalaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,70 +16,99 @@ import java.util.Optional;
 @Service
 public class HorarioServicio {
     @Autowired
-    IHorarioRepositorio repositorio;
+    private IHorarioRepositorio repositorio;
 
-    //guardar
-    public Horario guardarHorario(Horario datosHorario) throws Exception {
+    @Autowired
+    private IPeliculaRepositorio peliculaRepositorio;
+
+    @Autowired
+    private ISalaRepositorio salaRepositorio;
+
+    // Guardar horario con relaciones desde DTO
+    public Horario guardarHorario(HorarioDTO datosHorario) throws Exception {
         try {
-            //validar los datos de entrada
-            return this.repositorio.save(datosHorario);
+            Horario nuevoHorario = convertirDtoAEntidad(datosHorario);
+            return repositorio.save(nuevoHorario);
         } catch (Exception error) {
-            throw new Exception(error.getMessage());
+            throw new Exception("Error al guardar horario: " + error.getMessage());
         }
     }
 
-    //buscar todos los registros
+    // Buscar todos los registros
     public List<Horario> buscarTodosHorarios() throws Exception {
         try {
-            return this.repositorio.findAll();
+            return repositorio.findAll();
         } catch (Exception error) {
-            throw new Exception(error.getMessage());
+            throw new Exception("Error al buscar horarios: " + error.getMessage());
         }
     }
 
-    //buscar por id
+    // Buscar por id
     public Horario buscarHorarioPorId(Integer idHorario) throws Exception {
+        return repositorio.findById(idHorario)
+                .orElseThrow(() -> new Exception("Horario con ID " + idHorario + " no encontrado"));
+    }
+
+    // Modificar horario completo desde DTO
+    public Horario modificarHorario(Integer id, HorarioDTO datosHorario) throws Exception {
         try {
-            Optional<Horario> horarioBuscado = this.repositorio.findById(idHorario);
-            if (horarioBuscado.isPresent()) {
-                return horarioBuscado.get();
-            } else {
-                throw new Exception("El horario consultado no está en BD");
-            }
+            Horario horarioExistente = buscarHorarioPorId(id);
+            actualizarEntidadDesdeDto(horarioExistente, datosHorario);
+            return repositorio.save(horarioExistente);
         } catch (Exception error) {
-            throw new Exception(error.getMessage());
+            throw new Exception("Error al modificar horario: " + error.getMessage());
         }
     }
 
-    //modificar por id
-    public Horario modificarHorario(Integer id, Horario datosHorario) throws Exception {
+    // Eliminar por id
+    public void eliminarHorario(Integer id) throws Exception {
         try {
-            Optional<Horario> horarioBuscado = this.repositorio.findById(id);
-            if (horarioBuscado.isPresent()) {
-                horarioBuscado.get().setFechaHoraInicio(datosHorario.getFechaHoraInicio());
-                horarioBuscado.get().setFechaHoraFin(datosHorario.getFechaHoraFin());
-                horarioBuscado.get().setPrecioGeneral(datosHorario.getPrecioGeneral());
-                return this.repositorio.save(horarioBuscado.get());
-            } else {
-                throw new Exception("Horario no encontrado");
+            if (!repositorio.existsById(id)) {
+                throw new Exception("Horario con ID " + id + " no encontrado");
             }
+            repositorio.deleteById(id);
         } catch (Exception error) {
-            throw new Exception(error.getMessage());
+            throw new Exception("Error al eliminar horario: " + error.getMessage());
         }
     }
 
-    //eliminar por id
-    public boolean eliminarHorario(Integer id) throws Exception {
-        try {
-            Optional<Horario> horarioBuscado = this.repositorio.findById(id);
-            if (horarioBuscado.isPresent()) {
-                this.repositorio.deleteById(id);
-                return true;
-            } else {
-                throw new Exception("Horario no encontrado");
-            }
-        } catch (Exception error) {
-            throw new Exception(error.getMessage());
+    // Métodos auxiliares privados
+    private Horario convertirDtoAEntidad(HorarioDTO dto) throws Exception {
+        Horario horario = new Horario();
+        horario.setFechaHoraInicio(dto.getFechaHoraInicio());
+        horario.setFechaHoraFin(dto.getFechaHoraFin());
+        horario.setPrecioGeneral(dto.getPrecioGeneral());
+
+        if (dto.getPeliculaId() != null) {
+            Pelicula pelicula = peliculaRepositorio.findById(dto.getPeliculaId())
+                    .orElseThrow(() -> new Exception("Película con ID " + dto.getPeliculaId() + " no encontrada"));
+            horario.setPelicula(pelicula);
+        }
+
+        if (dto.getSalaId() != null) {
+            Sala sala = salaRepositorio.findById(dto.getSalaId())
+                    .orElseThrow(() -> new Exception("Sala con ID " + dto.getSalaId() + " no encontrada"));
+            horario.setSala(sala);
+        }
+
+        return horario;
+    }
+
+    private void actualizarEntidadDesdeDto(Horario horario, HorarioDTO dto) throws Exception {
+        horario.setFechaHoraInicio(dto.getFechaHoraInicio());
+        horario.setFechaHoraFin(dto.getFechaHoraFin());
+        horario.setPrecioGeneral(dto.getPrecioGeneral());
+
+        if (dto.getPeliculaId() != null) {
+            Pelicula pelicula = peliculaRepositorio.findById(dto.getPeliculaId())
+                    .orElseThrow(() -> new Exception("Película con ID " + dto.getPeliculaId() + " no encontrada"));
+            horario.setPelicula(pelicula);
+        }
+
+        if (dto.getSalaId() != null) {
+            Sala sala = salaRepositorio.findById(dto.getSalaId())
+                    .orElseThrow(() -> new Exception("Sala con ID " + dto.getSalaId() + " no encontrada"));
+            horario.setSala(sala);
         }
     }
 }

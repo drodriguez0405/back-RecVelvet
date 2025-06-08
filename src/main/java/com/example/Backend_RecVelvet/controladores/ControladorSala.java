@@ -1,60 +1,88 @@
 package com.example.Backend_RecVelvet.controladores;
 
+import com.example.Backend_RecVelvet.dtos.SalaDTO;
 import com.example.Backend_RecVelvet.modelos.Sala;
+import com.example.Backend_RecVelvet.repositorios.ISalaRepositorio;
 import com.example.Backend_RecVelvet.servicios.SalaServicio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sala")
+@CrossOrigin(origins = "*")
 public class ControladorSala {
     @Autowired
-    SalaServicio servicio;
+    private SalaServicio servicio;
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Sala datosPeticion) {
+    @Autowired
+    private ISalaRepositorio salaRepositorio;
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> registrarSala(@Valid @RequestBody SalaDTO datosSala) {
         try {
-            return new ResponseEntity<>(this.servicio.guardarSala(datosPeticion), HttpStatus.CREATED);
+            Sala nuevaSala = new Sala();
+            nuevaSala.setId(datosSala.getId());
+            nuevaSala.setNombre(datosSala.getNombre());
+            nuevaSala.setCapacidad(datosSala.getCapacidad());
+            nuevaSala.setDescripcion(datosSala.getDescripcion());
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(servicio.guardarSala(nuevaSala));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    @GetMapping
-    public ResponseEntity<?> buscarTodos() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> buscarTodasSalas() {
         try {
-            return new ResponseEntity<>(this.servicio.buscarTodasSalas(), HttpStatus.OK);
+            return ResponseEntity.ok(servicio.buscarTodasSalas());
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(error.getMessage());
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> buscarSalaPorId(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.servicio.buscarSalaPorId(id), HttpStatus.OK);
+            return ResponseEntity.ok(servicio.buscarSalaPorId(id));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(error.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody Sala datos) {
+    @PutMapping(value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> modificarSala(@PathVariable Integer id,
+                                           @Valid @RequestBody SalaDTO datosSala) {
         try {
-            return new ResponseEntity<>(this.servicio.modificarSala(id, datos), HttpStatus.OK);
+            // Convertir DTO a Entidad
+            Sala salaActualizada = new Sala();
+            salaActualizada.setId(id);
+            salaActualizada.setNombre(datosSala.getNombre());
+            salaActualizada.setCapacidad(datosSala.getCapacidad());
+            salaActualizada.setDescripcion(datosSala.getDescripcion());
+
+            return ResponseEntity.ok(servicio.modificarSala(id, salaActualizada));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_GATEWAY);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> eliminarSala(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.servicio.eliminarSala(id), HttpStatus.OK);
+            servicio.eliminarSala(id);
+            return ResponseEntity.ok("Sala eliminada correctamente");
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 }

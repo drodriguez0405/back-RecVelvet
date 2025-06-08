@@ -71,4 +71,24 @@ public class Sala {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public void setCapacidad(Integer capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public List<Horario> getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(List<Horario> horarios) {
+        this.horarios = horarios;
+    }
+
+    public List<ButacaReserva> getButacasReservadas() {
+        return butacasReservadas;
+    }
+
+    public void setButacasReservadas(List<ButacaReserva> butacasReservadas) {
+        this.butacasReservadas = butacasReservadas;
+    }
 }

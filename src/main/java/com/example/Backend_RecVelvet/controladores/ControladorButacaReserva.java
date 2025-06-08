@@ -1,5 +1,6 @@
 package com.example.Backend_RecVelvet.controladores;
 
+import com.example.Backend_RecVelvet.dtos.ButacaReservaDTO;
 import com.example.Backend_RecVelvet.modelos.ButacaReserva;
 import com.example.Backend_RecVelvet.servicios.ButacaReservaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,51 +10,53 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/butaca-reserva")
+@CrossOrigin(origins = "*")
 public class ControladorButacaReserva {
 
     @Autowired
-    ButacaReservaServicio butacaReservaServicio;
+    private ButacaReservaServicio butacaReservaServicio;
 
     @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody ButacaReserva datosPeticion) {
+    public ResponseEntity<?> guardarButacaReserva(@RequestBody ButacaReservaDTO datosButaca) {
         try {
-            return new ResponseEntity<>(this.butacaReservaServicio.guardarButacaReserva(datosPeticion), HttpStatus.CREATED);
+            return new ResponseEntity<>(butacaReservaServicio.guardarButacaReserva(datosButaca), HttpStatus.CREATED);
         } catch (Exception error) {
             return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping
-    public ResponseEntity<?> buscarTodos() {
+    public ResponseEntity<?> buscarTodasButacasReservadas() {
         try {
-            return new ResponseEntity<>(this.butacaReservaServicio.buscarTodasButacasReservadas(), HttpStatus.OK);
+            return new ResponseEntity<>(butacaReservaServicio.buscarTodasButacasReservadas(), HttpStatus.OK);
         } catch (Exception error) {
             return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> buscarButacaReservaPorId(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.butacaReservaServicio.buscarButacaReservaPorId(id), HttpStatus.OK);
+            return new ResponseEntity<>(butacaReservaServicio.buscarButacaReservaPorId(id), HttpStatus.OK);
         } catch (Exception error) {
             return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody ButacaReserva datos) {
+    public ResponseEntity<?> modificarButacaReserva(@PathVariable Integer id, @RequestBody ButacaReservaDTO datosButaca) {
         try {
-            return new ResponseEntity<>(this.butacaReservaServicio.modificarButacaReserva(id, datos), HttpStatus.OK);
+            return new ResponseEntity<>(butacaReservaServicio.modificarButacaReserva(id, datosButaca), HttpStatus.OK);
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarButacaReserva(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.butacaReservaServicio.eliminarButacaReserva(id), HttpStatus.OK);
+            butacaReservaServicio.eliminarButacaReserva(id);
+            return new ResponseEntity<>("Butaca-Reserva eliminada correctamente", HttpStatus.OK);
         } catch (Exception error) {
             return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
         }

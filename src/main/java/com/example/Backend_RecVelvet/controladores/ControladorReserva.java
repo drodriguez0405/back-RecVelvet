@@ -1,60 +1,82 @@
 package com.example.Backend_RecVelvet.controladores;
 
+import com.example.Backend_RecVelvet.dtos.ReservaDTO;
 import com.example.Backend_RecVelvet.modelos.Reserva;
 import com.example.Backend_RecVelvet.servicios.ReservaServicio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reserva")
+@CrossOrigin(origins = "*")
 public class ControladorReserva {
     @Autowired
     ReservaServicio reservaServicio;
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Reserva datosPeticion) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> registrarReserva(@Valid @RequestBody ReservaDTO datosReserva) {
         try {
-            return new ResponseEntity<>(this.reservaServicio.guardarReserva(datosPeticion), HttpStatus.CREATED);
+            Reserva nuevaReserva = new Reserva();
+            nuevaReserva.setCodigoReserva(datosReserva.getCodigoReserva());
+            nuevaReserva.setTotalPagado(datosReserva.getTotalPagado());
+            nuevaReserva.setEstadoPago(datosReserva.getEstadoPago());
+            nuevaReserva.setMetodoPago(datosReserva.getMetodoPago());
+            nuevaReserva.setTransaccionId(datosReserva.getTransaccionId());
+            // Las relaciones se manejarían en el servicio
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(reservaServicio.guardarReservaConRelaciones(
+                            nuevaReserva,
+                            datosReserva.getUsuarioId(),
+                            datosReserva.getHorarioId()));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    @GetMapping
-    public ResponseEntity<?> buscarTodos() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> buscarTodasReservas() {
         try {
-            return new ResponseEntity<>(this.reservaServicio.buscarTodasReservas(), HttpStatus.OK);
+            return ResponseEntity.ok(reservaServicio.buscarTodasReservas());
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(error.getMessage());
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> buscarReservaPorId(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.reservaServicio.buscarReservaPorId(id), HttpStatus.OK);
+            return ResponseEntity.ok(reservaServicio.buscarReservaPorId(id));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(error.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody Reserva datos) {
+    @PutMapping(value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> modificarReserva(@PathVariable Integer id,
+                                              @Valid @RequestBody ReservaDTO datosReserva) {
         try {
-            return new ResponseEntity<>(this.reservaServicio.modificarReserva(id, datos), HttpStatus.OK);
+            return ResponseEntity.ok(reservaServicio.actualizarReservaDesdeDTO(id, datosReserva));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_GATEWAY);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> eliminarReserva(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.reservaServicio.eliminarReserva(id), HttpStatus.OK);
+            reservaServicio.eliminarReserva(id);
+            return ResponseEntity.ok("Reserva eliminada correctamente");
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 }

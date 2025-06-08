@@ -60,4 +60,20 @@ public class ButacaReserva {
     public void setNumeroAsiento(String numeroAsiento) {
         this.numeroAsiento = numeroAsiento;
     }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
 }

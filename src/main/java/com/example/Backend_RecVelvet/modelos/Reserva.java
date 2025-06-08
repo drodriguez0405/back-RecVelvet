@@ -118,4 +118,29 @@ public class Reserva {
     public void setTransaccionId(String transaccionId) {
         this.transaccionId = transaccionId;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Horario getHorario() {
+        return horario;
+    }
+
+    public void setHorario(Horario horario) {
+        this.horario = horario;
+    }
+
+    public List<ButacaReserva> getButacaReservas() {
+        return butacaReservas;
+    }
+
+    public void setButacaReservas(List<ButacaReserva> butacaReservas) {
+        this.butacaReservas = butacaReservas;
+    }
+
 }

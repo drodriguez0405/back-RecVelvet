@@ -1,61 +1,89 @@
 package com.example.Backend_RecVelvet.controladores;
 
+import com.example.Backend_RecVelvet.dtos.PeliculaDTO;
 import com.example.Backend_RecVelvet.modelos.Pelicula;
 import com.example.Backend_RecVelvet.servicios.PeliculaServicio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/pelicula")
+@CrossOrigin(origins = "*")
 public class ControladorPelicula {
 
     @Autowired
-    PeliculaServicio peliculaServicio;
+    private PeliculaServicio peliculaServicio;
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Pelicula datosPeticion) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> registrarPelicula(@Valid @RequestBody PeliculaDTO datosPelicula) {
         try {
-            return new ResponseEntity<>(this.peliculaServicio.guardarPelicula(datosPeticion), HttpStatus.CREATED);
+            Pelicula nuevaPelicula = new Pelicula();
+            nuevaPelicula.setTitulo(datosPelicula.getTitulo());
+            nuevaPelicula.setSinopsis(datosPelicula.getSinopsis());
+            nuevaPelicula.setDuracionMinutos(datosPelicula.getDuracionMinutos());
+            nuevaPelicula.setGenero(datosPelicula.getGenero());
+            nuevaPelicula.setClasificacion(datosPelicula.getClasificacion());
+            nuevaPelicula.setDirector(datosPelicula.getDirector());
+            nuevaPelicula.setActores(datosPelicula.getActores());
+            nuevaPelicula.setUrlPortada(datosPelicula.getUrlPortada());
+            nuevaPelicula.setUrlTrailer(datosPelicula.getUrlTrailer());
+            nuevaPelicula.setFechaLanzamiento(datosPelicula.getFechaLanzamiento());
+            nuevaPelicula.setEstadoPelicula(datosPelicula.getEstadoPelicula());
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(peliculaServicio.guardarPelicula(nuevaPelicula));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    @GetMapping
-    public ResponseEntity<?> buscarTodos() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> buscarTodasPeliculas() {
         try {
-            return new ResponseEntity<>(this.peliculaServicio.buscarTodasPeliculas(), HttpStatus.OK);
+            return ResponseEntity.ok(peliculaServicio.buscarTodasPeliculas());
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(error.getMessage());
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> buscarPeliculaPorId(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.peliculaServicio.buscarPeliculaPorId(id), HttpStatus.OK);
+            return ResponseEntity.ok(peliculaServicio.buscarPeliculaPorId(id));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(error.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> modificar(@PathVariable Integer id, @RequestBody Pelicula datos) {
+    @PutMapping(value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> modificarPelicula(@PathVariable Integer id,
+                                               @Valid @RequestBody PeliculaDTO datosPelicula) {
         try {
-            return new ResponseEntity<>(this.peliculaServicio.modificarPelicula(id, datos), HttpStatus.OK);
+            Pelicula peliculaActualizada = new Pelicula();
+            peliculaActualizada.setTitulo(datosPelicula.getTitulo());
+            // ... (setear todos los campos como en el POST)
+
+            return ResponseEntity.ok(peliculaServicio.modificarPelicula(id, peliculaActualizada));
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_GATEWAY);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> eliminarPelicula(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(this.peliculaServicio.eliminarPelicula(id), HttpStatus.OK);
+            peliculaServicio.eliminarPelicula(id);
+            return ResponseEntity.ok("Película eliminada correctamente");
         } catch (Exception error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(error.getMessage());
         }
     }
 }

@@ -1,64 +1,31 @@
-package com.example.Backend_RecVelvet.modelos;
+package com.example.Backend_RecVelvet.dtos;
 
 import com.example.Backend_RecVelvet.ayudas.enums.EstadoPeliculaEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Entity
-@Table(name = "pelicula_tabla")
-public class Pelicula {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_pelicula")
+public class PeliculaDTO {
     private Integer id;
-
-    @Column(name = "titulo", length = 150,nullable = false)
     private String titulo;
-
-    @Column(name = "sinopsis", length = 150,nullable = false)
     private String sinopsis;
-
-    @Column(name = "duracion_minutos")
     private Integer duracionMinutos;
-
-    @Column(name = "genero" ,length = 50,nullable = false)
     private String genero;
-
-    @Column(name = "clasificacion", length = 10,nullable = false )
     private String clasificacion;
-
-    @Column(name = "director" , length = 100, nullable = false)
     private String director;
-
-    @Column(name = "actores", length = 100 ,nullable = false )
     private String actores;
-
-    @Column(name = "url_portada" , length = 150, nullable = false)
     private String urlPortada;
-
-    @Column(name = "url_trailer", length = 185,nullable = false )
     private String urlTrailer;
 
-    @Column(name = "fecha_entrega",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime fechaLanzamiento;
 
-
-    @Column(name = "estado" ,columnDefinition = "VARCHAR(40) DEFAULT 'ESTRENO'")
-    @Enumerated(EnumType.STRING)
     private EstadoPeliculaEnum estadoPelicula;
 
-    @OneToMany(mappedBy = "pelicula")
-    @JsonManagedReference(value = "pelicula-horarios")
-    private List<Horario> horarios;
-
-    public Pelicula() {
+    public PeliculaDTO() {
     }
 
-    public Pelicula(Integer id, String titulo, String sinopsis, Integer duracionMinutos, String genero, String clasificacion, String director, String actores, String urlPortada, String urlTrailer, LocalDateTime fechaLanzamiento) {
+    public PeliculaDTO(Integer id, String titulo, String sinopsis, Integer duracionMinutos, String genero, String clasificacion, String director, String actores, String urlPortada, String urlTrailer, LocalDateTime fechaLanzamiento, EstadoPeliculaEnum estadoPelicula) {
         this.id = id;
         this.titulo = titulo;
         this.sinopsis = sinopsis;
@@ -70,6 +37,7 @@ public class Pelicula {
         this.urlPortada = urlPortada;
         this.urlTrailer = urlTrailer;
         this.fechaLanzamiento = fechaLanzamiento;
+        this.estadoPelicula = estadoPelicula;
     }
 
     public Integer getId() {
@@ -166,13 +134,5 @@ public class Pelicula {
 
     public void setEstadoPelicula(EstadoPeliculaEnum estadoPelicula) {
         this.estadoPelicula = estadoPelicula;
-    }
-
-    public List<Horario> getHorarios() {
-        return horarios;
-    }
-
-    public void setHorarios(List<Horario> horarios) {
-        this.horarios = horarios;
     }
 }

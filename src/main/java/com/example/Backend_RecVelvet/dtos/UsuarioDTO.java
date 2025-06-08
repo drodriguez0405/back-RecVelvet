@@ -1,48 +1,28 @@
-package com.example.Backend_RecVelvet.modelos;
+package com.example.Backend_RecVelvet.dtos;
 
 import com.example.Backend_RecVelvet.ayudas.enums.UsuarioRolEnum;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Entity
-@Table(name = "usuario_tabla")
-public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+public class UsuarioDTO {
     private Integer id;
-
-    @Column(name = "nombre",length = 100,nullable = false)
     private String nombre;
-
-    @Column(name = "correo_electronico",length = 100, unique = true,nullable = false)
     private String correoElectronico;
-
-    @Column(name = "contrasena", nullable = false)
     private String contrasena;
 
-    @Column(name = "fecha_registro", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime fechaRegistro;
 
-    @Column(name = "ultimo_login", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime ultimoLogin;
 
-    @Column(name = "rol_usuario", columnDefinition = "VARCHAR(20) DEFAULT 'CLIENTE'")
-    @Enumerated(EnumType.STRING)
     private UsuarioRolEnum usuarioRol;
 
+    public UsuarioDTO() {}
 
-    @OneToMany(mappedBy = "usuario")
-    @JsonManagedReference(value = "usuario-reservas")
-    private List<Reserva> reservas;
-    public Usuario() {
-    }
-
-    public Usuario(Integer id, String nombre, String correoElectronico, String contrasena, LocalDateTime fechaRegistro, LocalDateTime ultimoLogin, UsuarioRolEnum usuarioRol) {
+    public UsuarioDTO(Integer id, String nombre, String correoElectronico, String contrasena,
+                      LocalDateTime fechaRegistro, LocalDateTime ultimoLogin, UsuarioRolEnum usuarioRol) {
         this.id = id;
         this.nombre = nombre;
         this.correoElectronico = correoElectronico;
@@ -107,13 +87,4 @@ public class Usuario {
     public void setUsuarioRol(UsuarioRolEnum usuarioRol) {
         this.usuarioRol = usuarioRol;
     }
-
-    public List<Reserva> getReservas() {
-        return reservas;
-    }
-
-    public void setReservas(List<Reserva> reservas) {
-        this.reservas = reservas;
-    }
-
 }

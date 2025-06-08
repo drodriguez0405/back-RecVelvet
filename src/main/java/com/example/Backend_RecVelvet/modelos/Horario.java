@@ -76,4 +76,20 @@ public class Horario {
     public void setPrecioGeneral(BigDecimal precioGeneral) {
         this.precioGeneral = precioGeneral;
     }
+
+    public Pelicula getPelicula() {
+        return pelicula;
+    }
+
+    public void setPelicula(Pelicula pelicula) {
+        this.pelicula = pelicula;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
 }
